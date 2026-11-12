@@ -1,0 +1,63 @@
+{
+  "name": "pixel-quota-left",
+  "displayName": "Pixel Quota Left",
+  "description": "One pixel-art tree per AI coding plan (Claude, Codex). Leaves on the tree = quota left.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Visualization", "Other"],
+  "main": "./out/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [{ "id": "quotaLeft", "title": "Quota Left", "icon": "media/icon.svg" }]
+    },
+    "views": {
+      "quotaLeft": [{ "type": "webview", "id": "quotaLeft.view", "name": "Plans" }]
+    },
+    "commands": [
+      { "command": "quotaLeft.refresh", "title": "Quota Left: Refresh", "icon": "$(refresh)" },
+      { "command": "quotaLeft.open", "title": "Quota Left: Show Trees" }
+    ],
+    "menus": {
+      "view/title": [{ "command": "quotaLeft.refresh", "when": "view == quotaLeft.view", "group": "navigation" }]
+    },
+    "configuration": {
+      "title": "Pixel Quota Left",
+      "properties": {
+        "quotaLeft.refreshIntervalSeconds": {
+          "type": "number", "default": 120, "minimum": 30,
+          "description": "How often plan usage is fetched from the providers."
+        },
+        "quotaLeft.claude.enabled": {
+          "type": "boolean", "default": true,
+          "description": "Show a tree for your Claude plan (reads the Claude Code login token and queries api.anthropic.com)."
+        },
+        "quotaLeft.codex.enabled": {
+          "type": "boolean", "default": true,
+          "description": "Show a tree for your ChatGPT/Codex plan (reads the Codex login token and queries chatgpt.com)."
+        },
+        "quotaLeft.claude.configDir": {
+          "type": "string", "default": "",
+          "description": "Claude config dir containing .credentials.json. Default: $CLAUDE_CONFIG_DIR or ~/.claude."
+        },
+        "quotaLeft.codex.home": {
+          "type": "string", "default": "",
+          "description": "Codex home containing auth.json and sessions/. Default: $CODEX_HOME or ~/.codex."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "npx @vscode/vsce package --allow-missing-repository --no-rewrite-relative-links",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
